@@ -2,7 +2,6 @@ package ru.netology;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -12,6 +11,7 @@ public final class Request {
     private final String protocol;
     private final List<String> headers;
     private final String body;
+    private List<NameValuePair> params;
 
     public Request(String method, String path, String protocol, List<String> headers, String body) {
         this.method = method;
@@ -42,7 +42,6 @@ public final class Request {
     }
 
     public String getQueryParam(String name) {
-        List<NameValuePair> params = getQueryParams();
         for (final NameValuePair param : params) {
             if (param.getName().equals(name)){
                 return param.getValue();
@@ -50,9 +49,14 @@ public final class Request {
         }
         return "Поле не обнаружено";
     }
-
     public List<NameValuePair> getQueryParams() {
-        return URLEncodedUtils.parse(path, StandardCharsets.UTF_8, '?', '&', ';');
+        return params;
+    }
+
+    public void createQueryParams() {
+        if (method.equals("GET")){
+            params = URLEncodedUtils.parse(path, StandardCharsets.UTF_8, '?', '&', ';');
+        }
     }
 
     public String getMethod() {

@@ -26,6 +26,7 @@ public class RequestBuilder {
     public Request build(){
         Request request = new Request(method, path, protocol, headers, body);
         if (method != null && path != null && protocol != null){
+            request.createQueryParams();
             return request;
         }
         return null;

@@ -91,13 +91,13 @@ public class Server implements Runnable {
                 }
             }
             Request request = requestBuilder.build(); // Собираем объект Request
-            if (request.method().equals("GET")) {
+            if (request.method().equals(GET)) {
                 if (MultiTreadServer.getHandlers.containsKey(request.path())) {
                     MultiTreadServer.getHandlers.get(request.path()).handle(request, out);
                 } else {
                     MultiTreadServer.getHandlers.get("/").handle(request, out);
                 }
-            } else if (request.method().equals("POST")) {
+            } else if (request.method().equals(POST)) {
                 if (MultiTreadServer.postHandlers.containsKey(request.path())) {
                     MultiTreadServer.postHandlers.get(request.path()).handle(request, out);
                 } else {
