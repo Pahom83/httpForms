@@ -6,12 +6,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public final class Request {
+    private static final String GET = "GET";
+    private static final String POST = "POST";
     private final String method;
     private final String path;
     private final String protocol;
     private final List<String> headers;
     private final String body;
     private List<NameValuePair> params;
+    private final String referer = "Referer: ";
+    private String refererValue;
 
     public Request(String method, String path, String protocol, List<String> headers, String body) {
         this.method = method;
@@ -54,8 +58,17 @@ public final class Request {
     }
 
     public void createQueryParams() {
-        if (method.equals("GET")){
+        if (method.equals(GET)){
             params = URLEncodedUtils.parse(path, StandardCharsets.UTF_8, '?', '&', ';');
+        } else if (method.equals(POST)){
+            for (String header : headers){
+                if (header.contains(referer)){
+                    refererValue = header.substring(referer.length());
+                }
+                if (header.contains("application/x-www-form-urlencoded")){
+                    params = URLEncodedUtils.parse(body, StandardCharsets.UTF_8, '?', '&', ';');
+                }
+            }
         }
     }
 
@@ -78,4 +91,8 @@ public final class Request {
     public String getBody() {
         return body;
     }
+    public String getRefererValue() {
+        return refererValue;
+    }
+
 }
